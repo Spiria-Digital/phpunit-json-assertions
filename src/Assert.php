@@ -68,7 +68,7 @@ trait Assert
         $file = tempnam(sys_get_temp_dir(), 'json-schema-');
         file_put_contents($file, $schema);
 
-        self::assertJsonMatchesSchema($file, $content);
+        self::assertJsonMatchesSchema($file, $content, $msg);
     }
 
     /**
