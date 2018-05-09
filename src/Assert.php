@@ -34,8 +34,9 @@ trait Assert
      *
      * @param string       $schema  Path to the schema file
      * @param array|object $content JSON array or object
+     * @param string       $msg     Extra message to include when failing.
      */
-    public static function assertJsonMatchesSchema($schema, $content)
+    public static function assertJsonMatchesSchema($schema, $content, $msg = '')
     {
         // Assume references are relative to the current file
         // Create an issue or pull request if you need more complex use cases
@@ -50,6 +51,7 @@ trait Assert
             return sprintf($message, $exception['property'], $exception['constraint'], $exception['message']);
         }, $validator->getErrors());
         $messages[] = '- Response: '.json_encode($content);
+        $messages[] = $msg;
 
         \PHPUnit_Framework_Assert::assertTrue($validator->isValid(), implode("\n", $messages));
     }
@@ -59,8 +61,9 @@ trait Assert
      *
      * @param string       $schema  Schema data
      * @param array|object $content JSON content
+     * @param string       $msg     Extra message to include when failing.
      */
-    public static function assertJsonMatchesSchemaString($schema, $content)
+    public static function assertJsonMatchesSchemaString($schema, $content, $msg = '')
     {
         $file = tempnam(sys_get_temp_dir(), 'json-schema-');
         file_put_contents($file, $schema);
@@ -79,13 +82,14 @@ trait Assert
      * @param string       $expression Expression to retrieve the result
      *                                 (e.g. locations[?state == 'WA'].name | sort(@))
      * @param array|object $json       JSON Content
+     * @param string       $msg        Extra message to include when failing.
      */
-    public static function assertJsonValueEquals($expected, $expression, $json)
+    public static function assertJsonValueEquals($expected, $expression, $json, $msg = '')
     {
         $result = \JmesPath\Env::search($expression, $json);
 
-        \PHPUnit_Framework_Assert::assertEquals($expected, $result);
-        \PHPUnit_Framework_Assert::assertInternalType(gettype($expected), $result);
+        \PHPUnit_Framework_Assert::assertEquals($expected, $result, $msg);
+        \PHPUnit_Framework_Assert::assertInternalType(gettype($expected), $result, $msg);
     }
 
     /**
