@@ -53,7 +53,7 @@ trait Assert
         $messages[] = '- Response: '.json_encode($content);
         $messages[] = $msg;
 
-        \PHPUnit_Framework_Assert::assertTrue($validator->isValid(), implode("\n", $messages));
+        \PHPUnit\Framework\Assert::assertTrue($validator->isValid(), implode("\n", $messages));
     }
 
     /**
@@ -68,7 +68,7 @@ trait Assert
         $file = tempnam(sys_get_temp_dir(), 'json-schema-');
         file_put_contents($file, $schema);
 
-        self::assertJsonMatchesSchema($file, $content);
+        self::assertJsonMatchesSchema($file, $content, $msg);
     }
 
     /**
@@ -88,8 +88,8 @@ trait Assert
     {
         $result = \JmesPath\Env::search($expression, $json);
 
-        \PHPUnit_Framework_Assert::assertEquals($expected, $result, $msg);
-        \PHPUnit_Framework_Assert::assertInternalType(gettype($expected), $result, $msg);
+        \PHPUnit\Framework\Assert::assertEquals($expected, $result, $msg);
+        \PHPUnit\Framework\Assert::assertInternalType(gettype($expected), $result, $msg);
     }
 
     /**
